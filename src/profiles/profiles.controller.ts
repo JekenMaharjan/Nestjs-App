@@ -63,13 +63,37 @@ export class ProfilesController {
         1. Create a DTO File for our create route's body. Hook that up in the controller.
         2. The class should have 2 fields (name & description) which are both strings
         3. Return the body we're receiving back to the client
+    
+        Solution:
     */
-    @Post()
-    create(@Body() createProfileDto: CreateProfileDto) {
+    @Post('test')
+    createProfile(@Body() createProfileDto: CreateProfileDto) {
         return {
             name: createProfileDto.name,
             description: createProfileDto.description,
         };
+    }
+
+    /*
+        Challenge:
+        1. Create a new 'create' function in the service file. It'll take the body of the post
+        request as a parameter, which will be the body that we're getting in the controller.
+        2. It needs to create a new profile and add it to the 'profiles' array.
+        3. Each profile has an 'id', 'name', and 'description'.
+        4. Remember, the backend is where you'll typically create IDs for new resources, not the
+        client. You'll notice that in the original array, we're creating unique IDs. We'll need to
+        create a new unique id for our new profile. Notice how we're using 'randomUUID()' to do that.
+        5. We'll also want to return the new profile we've created to the controller, and have that
+        return it as a response to the client.
+        6. You should receive a response from your Nest app with the unique 'id', 'name' and 'description'
+        if you've done this successfully. It'll have a status code of 201 and have the same response body
+        as when we tried to retrieve a single profile.
+
+        Solution:
+    */
+    @Post()
+    create(@Body() createProfileDto: CreateProfileDto) {
+        return this.profileService.create(createProfileDto);
     }
     
     // 4) PUT /profiles/:id
