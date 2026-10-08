@@ -25,14 +25,10 @@ export class ProfilesService {
         },
     ];
 
-    // ===========================================================================
-
     // Get all profiles
     findAll(): Profile [] {
         return this.profiles;
     }
-
-    // ===========================================================================
 
     // Get specific profile
     findOne(id: string): Profile {
@@ -40,13 +36,11 @@ export class ProfilesService {
 
         // If matching profile is not found
         if (!matchingProfile) {
-            throw new Error(`Profile with ID ${id} not found!`);
+            throw new Error(`Profile with ID ${id} is not found!`);
         }
 
         return matchingProfile;
     }
-
-    // ===========================================================================
 
     // Create a profile
     create(createProfileDto: CreateProfileDto): Profile {
@@ -59,36 +53,28 @@ export class ProfilesService {
         return createdProfile;
     }
 
-    // ===========================================================================
-
     // Update a profile
     update(id: string, updateProfileDto: UpdateProfileDto): Profile {
-        const matchingProfile = this.profiles.find(
-            (existingProfile) => existingProfile.id === id
-        );
+        const matchingProfile = this.profiles.find((profile) => profile.id === id);
 
         // If matching profile is not found
         if (!matchingProfile) {
-            throw new Error(`Profile with ID ${id} not found!`);
+            throw new Error(`Profile with ID ${id} is not found!`);
         }
 
         matchingProfile.name = updateProfileDto.name;
         matchingProfile.description = updateProfileDto.description;
-
+        
         return matchingProfile;
     }
 
-    // ===========================================================================
-
     // Delete a profile
     remove(id: string): void {
-        const matchingProfileIndex = this.profiles.findIndex(
-            (existingProfile) => existingProfile.id === id
-        );
+        const matchingProfileIndex = this.profiles.findIndex((profile) => profile.id === id);
 
         // If matching profile index is not found
         if (matchingProfileIndex === -1) {
-            throw new Error(`Profile with ID ${id} not found!`);
+            throw new Error(`Profile with ID ${id} is not found!`);
         }
 
         this.profiles.splice(matchingProfileIndex, 1);
