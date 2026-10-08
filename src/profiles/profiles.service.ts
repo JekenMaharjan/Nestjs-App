@@ -2,12 +2,12 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
-import { match } from 'assert';
+import { Profile } from './entities/profile/profile.interface';
 
 @Injectable()
 export class ProfilesService {
     // Array of Objects profile
-    private profiles = [
+    private profiles: Profile [] = [
         {
             id: randomUUID(),
             name: 'Brianna Watts',
@@ -25,25 +25,31 @@ export class ProfilesService {
         },
     ];
 
+    // ===========================================================================
+
     // Get all profiles
-    findAll() {
+    findAll(): Profile [] {
         return this.profiles;
     }
 
-    // Get particular profile
-    findOne(id: string) {
+    // ===========================================================================
+
+    // Get specific profile
+    findOne(id: string): Profile {
         const matchingProfile = this.profiles.find((profile) => profile.id === id);
 
         // If matching profile is not found
         if (!matchingProfile) {
-            throw new Error(`Profile with ID ${id} not found`);
+            throw new Error(`Profile with ID ${id} not found!`);
         }
 
         return matchingProfile;
     }
 
+    // ===========================================================================
+
     // Create a profile
-    create(createProfileDto: CreateProfileDto) {
+    create(createProfileDto: CreateProfileDto): Profile {
         const createdProfile = {
             id: randomUUID(),
             ...createProfileDto,
@@ -53,15 +59,17 @@ export class ProfilesService {
         return createdProfile;
     }
 
+    // ===========================================================================
+
     // Update a profile
-    update(id: string, updateProfileDto: UpdateProfileDto) {
+    update(id: string, updateProfileDto: UpdateProfileDto): Profile {
         const matchingProfile = this.profiles.find(
             (existingProfile) => existingProfile.id === id
         );
 
         // If matching profile is not found
         if (!matchingProfile) {
-            throw new Error(`Profile with ID ${id} not found`);
+            throw new Error(`Profile with ID ${id} not found!`);
         }
 
         matchingProfile.name = updateProfileDto.name;
@@ -69,6 +77,8 @@ export class ProfilesService {
 
         return matchingProfile;
     }
+
+    // ===========================================================================
 
     // Delete a profile
     remove(id: string): void {
@@ -78,7 +88,7 @@ export class ProfilesService {
 
         // If matching profile index is not found
         if (matchingProfileIndex === -1) {
-            throw new Error(`Profile with ID ${id} not found`);
+            throw new Error(`Profile with ID ${id} not found!`);
         }
 
         this.profiles.splice(matchingProfileIndex, 1);

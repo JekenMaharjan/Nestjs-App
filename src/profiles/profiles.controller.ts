@@ -19,10 +19,16 @@ export class ProfilesController {
     // Challenge 2: Solution
     @Get()
     findAll() {
-        return this.profileService.findAll();
+        try {
+            return this.profileService.findAll();
+        } catch (error) {
+            // Type Guard with 'instanceof Error'
+            const message = error instanceof Error ? error.message : 'No Profiles';
+            throw new NotFoundException(message);
+        }
     }
 
-    // =========================================================
+    // ===========================================================================
 
     // 2) GET /profiles/:id
 
@@ -38,11 +44,13 @@ export class ProfilesController {
         try {
             return this.profileService.findOne(id);
         } catch (error) {
-            throw new NotFoundException(error.message);
+            // Type Guard with 'instanceof Error'
+            const message = error instanceof Error ? error.message : 'Profile not found';
+            throw new NotFoundException(message);
         }
     }
 
-    // =========================================================
+    // ===========================================================================
 
     // 3) POST /profiles
 
@@ -61,7 +69,7 @@ export class ProfilesController {
         return this.profileService.create(createProfileDto);
     }
 
-    // =========================================================
+    // ===========================================================================
     
     // 4) PUT /profiles/:id
 
@@ -86,11 +94,13 @@ export class ProfilesController {
         try {
             return this.profileService.update(id, updateProfileDto);
         } catch (error) {
-            throw new NotFoundException(error.message);
+            // Type Guard with 'instanceof Error'
+            const message = error instanceof Error ? error.message : 'Profile not found';
+            throw new NotFoundException(message);
         }
     }
 
-    // =========================================================
+    // ===========================================================================
     
     // 5) DELETE /profiles/:id
 
@@ -106,7 +116,9 @@ export class ProfilesController {
         try {
             return this.profileService.remove(id);
         } catch (error) {
-            throw new NotFoundException(error.message);
+            // Type Guard with 'instanceof Error'
+            const message = error instanceof Error ? error.message : 'Profile not found';
+            throw new NotFoundException(message);
         }
     }
 }
