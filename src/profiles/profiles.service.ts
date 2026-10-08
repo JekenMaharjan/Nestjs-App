@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
+import { match } from 'assert';
 
 @Injectable()
 export class ProfilesService {
@@ -59,5 +60,18 @@ export class ProfilesService {
         matchingProfile.description = updateProfileDto.description;
 
         return matchingProfile;
+    }
+
+    // Delete a profile
+    remove(id: string): void {
+        const matchingProfileIndex = this.profiles.findIndex(
+            (existingProfile) => existingProfile.id === id
+        );
+
+        if (!matchingProfileIndex) {
+            throw new NotFoundException(`Profile with ID ${id} not found`);
+        }
+
+        this.profiles.splice(matchingProfileIndex, 1);
     }
 }
