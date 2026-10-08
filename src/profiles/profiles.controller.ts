@@ -1,7 +1,8 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, NotFoundException, Param, ParseUUIDPipe, Post, Put, Query, ValidationPipe } from '@nestjs/common';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { ProfilesService } from './profiles.service';
+import type { UUID } from 'crypto';
 
 @Controller('profiles')
 export class ProfilesController {
@@ -33,8 +34,12 @@ export class ProfilesController {
 
     // Challenge 4: Solution
     @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.profileService.findOne(id);
+    findOne(@Param('id', ParseUUIDPipe) id: UUID) {
+        try {
+            return this.profileService.findOne(id);
+        } catch (error) {
+            throw new NotFoundException(error.message);
+        }
     }
 
     // =========================================================
@@ -75,10 +80,14 @@ export class ProfilesController {
     // Challenge 8: Solution
     @Put(':id')
     update(
-        @Param('id') id: string,
+        @Param('id', ParseUUIDPipe) id: UUID,
         @Body() updateProfileDto: UpdateProfileDto
     ) {
-        return this.profileService.update(id, updateProfileDto);
+        try {
+            return this.profileService.update(id, updateProfileDto);
+        } catch (error) {
+            throw new NotFoundException(error.message);
+        }
     }
 
     // =========================================================
@@ -93,7 +102,11 @@ export class ProfilesController {
     // Challenge 10: Solution
     @Delete(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
-    remove(@Param('id') id:string) { 
-        this.profileService.remove(id);
+    remove(@Param('id', ParseUUIDPipe) id:UUID) { 
+        try {
+            return this.profileService.remove(id);
+        } catch (error) {
+            throw new NotFoundException(error.message);
+        }
     }
 }

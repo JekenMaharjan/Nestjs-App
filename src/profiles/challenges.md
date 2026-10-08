@@ -97,3 +97,21 @@
 4. Our controller is already properly responding with a 204 and an empty body, so you just need to call the service method in the controller.
 
 ---
+
+## Challenge 11 (profiles.service.ts)
+
+1. In both the update and remove methods in the service file, throw the correct exception when no matching profile is found.
+
+---
+
+## Challenge 12 (profiles.controller.ts)
+
+1. Use the ParseUUIDPipe to transform the id param to a UUID in both the PUT and DELETE routes.
+
+---
+
+## Challenge 13 (profiles.controller.ts)
+
+1. Add the ValidationPipe for the body in our PUT route.
+
+2. Using class validator, add a couple of decorators to UpdateProfileDto to create more granular restrictions for the values.

@@ -32,7 +32,14 @@ export class ProfilesService {
 
     // Get particular profile
     findOne(id: string) {
-        return this.profiles.find((profile) => profile.id === id);
+        const matchingProfile = this.profiles.find((profile) => profile.id === id);
+
+        // If matching profile is not found
+        if (!matchingProfile) {
+            throw new Error(`Profile with ID ${id} not found`);
+        }
+
+        return matchingProfile;
     }
 
     // Create a profile
@@ -52,8 +59,9 @@ export class ProfilesService {
             (existingProfile) => existingProfile.id === id
         );
 
+        // If matching profile is not found
         if (!matchingProfile) {
-            throw new NotFoundException(`Profile with ID ${id} not found`);
+            throw new Error(`Profile with ID ${id} not found`);
         }
 
         matchingProfile.name = updateProfileDto.name;
@@ -68,8 +76,9 @@ export class ProfilesService {
             (existingProfile) => existingProfile.id === id
         );
 
-        if (!matchingProfileIndex) {
-            throw new NotFoundException(`Profile with ID ${id} not found`);
+        // If matching profile index is not found
+        if (matchingProfileIndex === -1) {
+            throw new Error(`Profile with ID ${id} not found`);
         }
 
         this.profiles.splice(matchingProfileIndex, 1);
