@@ -14,6 +14,10 @@ async function bootstrap() {
 
     app.useGlobalPipes(new ValidationPipe);
 
+    app.enableCors({
+        origin: 'http://localhost:4200',
+    });
+
     // '0.0.0.0' allows Fastify to accept connections from all network interfaces
     await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
     console.log(`Application is running on: ${await app.getUrl()}`);
