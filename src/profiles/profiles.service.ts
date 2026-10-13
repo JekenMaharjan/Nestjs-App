@@ -3,9 +3,16 @@ import { randomUUID } from 'crypto';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { Profile } from './entities/profile/profile.interface';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ProfilesService {
+    constructor(
+        @InjectRepository(Profile)
+        private profilesRepository: Repository<Profile>,
+    ) {}
+
     // Array of Objects profile
     private profiles: Profile [] = [
         {
@@ -25,14 +32,14 @@ export class ProfilesService {
         },
     ];
 
-    // Get all profiles
-    findAll(): Profile [] {
-        return this.profiles;
+    // Get all profiles from MySQL
+    async findAll(): Promise<Profile[]> {
+        return await this.profilesRepository.find();
     }
 
-    // Get specific profile
-    findOne(id: string): Profile {
-        const matchingProfile = this.profiles.find((profile) => profile.id === id);
+    // Get specific profile by ID from MySQL
+    async findOne(id: string): Promise<Profile> {
+        const matchingProfile = await this.profilesRepository.findOne({ where: { id } });
 
         // If matching profile is not found
         if (!matchingProfile) {
@@ -42,20 +49,15 @@ export class ProfilesService {
         return matchingProfile;
     }
 
-    // Create a profile
-    create(createProfileDto: CreateProfileDto): Profile {
-        const createdProfile = {
-            id: randomUUID(),
-            ...createProfileDto,
-        }
-
-        this.profiles.push(createdProfile);
-        return createdProfile;
+    // Create a profile and save it to MySQL
+    async create(createProfileDto: CreateProfileDto): Promise<Profile> {
+        const createdProfile = this.profilesRepository.create(createProfileDto);
+        return await this.profilesRepository.save(createdProfile);
     }
 
-    // Update a profile
-    update(id: string, updateProfileDto: UpdateProfileDto): Profile {
-        const matchingProfile = this.profiles.find((profile) => profile.id === id);
+    // Update a profile in MySQL
+    async update(id: string, updateProfileDto: UpdateProfileDto): Promise<Profile> {
+        const matchingProfile = await this.findOne(id);
 
         // If matching profile is not found
         if (!matchingProfile) {
@@ -64,19 +66,19 @@ export class ProfilesService {
 
         matchingProfile.name = updateProfileDto.name;
         matchingProfile.description = updateProfileDto.description;
-        
-        return matchingProfile;
+
+        return await this.profilesRepository.save(matchingProfile);
     }
 
-    // Delete a profile
-    remove(id: string): void {
-        const matchingProfileIndex = this.profiles.findIndex((profile) => profile.id === id);
+    // Delete a profile from MySQL
+    async remove(id: string): Promise<void> {
+        const matchingProfile = await this.findOne(id);
 
-        // If matching profile index is not found
-        if (matchingProfileIndex === -1) {
+        // If matching profile is not found
+        if (!matchingProfile) {
             throw new Error(`Profile with ID ${id} is not found!`);
         }
 
-        this.profiles.splice(matchingProfileIndex, 1);
+        await this.profilesRepository.remove(matchingProfile);
     }
 }

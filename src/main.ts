@@ -15,7 +15,9 @@ async function bootstrap() {
     app.useGlobalPipes(new ValidationPipe);
 
     app.enableCors({
-        origin: 'http://localhost:4200',
+        origin: 'http://localhost:4200', // Allow frontend angular
+        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS', // Explicitly allow methods
+        credentials: true,
     });
 
     // '0.0.0.0' allows Fastify to accept connections from all network interfaces
