@@ -16,7 +16,7 @@ async function bootstrap() {
 
     app.enableCors({
         origin: 'http://localhost:4200', // Allow frontend angular
-        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS', // Explicitly allow methods
+        methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'], // Explicitly allow methods since on fastify, a cross-origin PUT, PATCH, or DELETE is rejected
         credentials: true,
     });
 

@@ -14,6 +14,8 @@
     nest new project-name
     ```
 
+    > Select 'npm' package manager
+
 3. Run the application
 
     ```bash
@@ -55,8 +57,10 @@
 8. Generate Guard
 
     ```bash
-    nest g guard auth/roles
+    nest generate guard guards/auth
     ```
+
+    > You can use 'g' for 'generate' in command
 
 ---
 
