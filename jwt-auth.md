@@ -25,3 +25,7 @@
 5. Inject NestJS JWT service to generate tokens in AuthService and create method to validate user.
 
 6. Inject AuthService in AuthController to use its validation methods and handle POST request for login to return generated JWT token to the client.
+
+7. Now Test API development using POSTMAN tool and you must get generate JWT token which then you can verify or check it in JWT Debugger site {www.jwt.io}.
+
+8. Just like importing 'JwtModule', now import 'PassportModule' in auth.module.js. And, create strategies folder to

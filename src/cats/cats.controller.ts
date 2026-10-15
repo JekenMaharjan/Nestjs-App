@@ -1,7 +1,9 @@
 import { Controller, Delete, Get, Post } from '@nestjs/common';
+import { SkipThrottle } from '@nestjs/throttler';
 
+@SkipThrottle()
 @Controller('cats')
-export class CatsController { 
+export class CatsController {
     // Get all cats route
     @Get()
     findAll(): string {

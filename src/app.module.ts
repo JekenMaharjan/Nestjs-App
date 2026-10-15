@@ -7,9 +7,30 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Profile } from './profiles/entities/profile/profile.interface';
 import { AuthModule } from './auth/auth.module';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler'
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
     imports: [
+        // Rate Limiting - import ThrottlerModule to protect applications from brute-force attacks
+        ThrottlerModule.forRoot([
+            {
+                name: 'short',
+                ttl: 1000,  // time to live in milliseconds
+                limit: 3  // the maximum number of requests within ttl
+            },
+            {
+                name: 'medium',
+                ttl: 1000 * 10,
+                limit: 20
+            },
+            {
+                name: 'long',
+                ttl: 1000 * 60,
+                limit: 100
+            }
+        ]),
+
         // Make the .env variables available everywhere in the app
         ConfigModule.forRoot({
             isGlobal: true,
@@ -34,6 +55,12 @@ import { AuthModule } from './auth/auth.module';
         AuthModule,
     ],
     controllers: [AppController, CatsController],
-    providers: [AppService],
+    providers: [
+        AppService,
+        {
+            provide: APP_GUARD,
+            useClass: ThrottlerGuard,  // Makes the rate limiter active globally
+        },
+    ],
 })
 export class AppModule { }

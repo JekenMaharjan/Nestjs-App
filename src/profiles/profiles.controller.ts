@@ -3,7 +3,9 @@ import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { ProfilesService } from './profiles.service';
 import type { UUID } from 'crypto';
+import { SkipThrottle } from '@nestjs/throttler';
 
+@SkipThrottle()
 @Controller('profiles')
 export class ProfilesController {
     constructor(private profileService: ProfilesService) {}
@@ -70,7 +72,7 @@ export class ProfilesController {
     }
 
     // ===========================================================================
-    
+
     // 4) PUT /profiles/:id
 
     // Challenge 7: Solution
@@ -101,7 +103,7 @@ export class ProfilesController {
     }
 
     // ===========================================================================
-    
+
     // 5) DELETE /profiles/:id
 
     // Challenge 9: Solution
@@ -112,7 +114,7 @@ export class ProfilesController {
     // Challenge 10: Solution
     @Delete(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
-    remove(@Param('id', ParseUUIDPipe) id:UUID) { 
+    remove(@Param('id', ParseUUIDPipe) id:UUID) {
         try {
             return this.profileService.remove(id);
         } catch (error) {

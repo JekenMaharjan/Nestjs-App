@@ -17,9 +17,7 @@ export class AuthService {
         // Find user by username
         const findUser = fakeUsers.find((user) => user.username === username);
 
-        if (!findUser) {
-            return `${username} is not found`;
-        }
+        if (!findUser) return null;
 
         // Check if passwords match
         if (password === findUser.password) {
